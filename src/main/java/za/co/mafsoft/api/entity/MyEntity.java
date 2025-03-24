@@ -1,4 +1,4 @@
-package za.co.mafsoft.api;
+package za.co.mafsoft.api.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;

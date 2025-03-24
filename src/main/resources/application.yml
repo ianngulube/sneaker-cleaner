@@ -1,0 +1,14 @@
+quarkus:
+  smallrye-openapi:
+    path: /swagger
+
+  mailer:
+    from: register@dreambond.com.na
+    host: mail.dreambond.com.na
+    port: 587
+    username: register@dreambond.com.na
+    password: Register@2025$
+    auth-methods: LOGIN
+    login: REQUIRED
+
+    mock: true

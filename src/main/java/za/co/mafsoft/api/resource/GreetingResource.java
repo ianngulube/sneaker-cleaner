@@ -1,4 +1,4 @@
-package za.co.mafsoft.api;
+package za.co.mafsoft.api.resource;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
