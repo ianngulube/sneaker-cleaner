@@ -1,6 +1,7 @@
 package za.co.mafsoft.api.service;
 
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.mailer.Mail;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -10,6 +11,7 @@ import za.co.mafsoft.api.mapper.UserMapper;
 import za.co.mafsoft.api.model.User;
 import za.co.mafsoft.api.model.UserLogin;
 import za.co.mafsoft.api.repository.UserRepository;
+import za.co.mafsoft.api.service.interfaces.IEmailService;
 import za.co.mafsoft.api.service.interfaces.IUserService;
 import za.co.mafsoft.api.util.AppUtil;
 
@@ -25,6 +27,8 @@ public class UserService implements IUserService {
     UserRepository userRepository;
     @Inject
     UserMapper userMapper;
+    @Inject
+    IEmailService emailService;
 
     @Transactional
     @Override
@@ -33,6 +37,10 @@ public class UserService implements IUserService {
         System.setProperty("sneaker.test.verification.code", verificationCode);
         user.setVerificationCode(verificationCode);
         userRepository.persist(userMapper.modelToEntity(user));
+        emailService
+                .sendEmail(Mail.withHtml(user.getEmail(),
+                        "Verification Code",
+                        String.format("Your verification code is %s", verificationCode)));
     }
 
     @Transactional
