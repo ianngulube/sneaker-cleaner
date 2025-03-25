@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import za.co.mafsoft.api.model.enums.ItemTransport;
 import za.co.mafsoft.api.model.enums.ItemType;
 
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @Table(name = "item_table")
 @EqualsAndHashCode(callSuper = true)
 public class ItemEntity extends PanacheEntity {
+    private Long userId;
     private String itemCode;
     private String itemShortName;
     private String itemDescription;
@@ -23,4 +25,5 @@ public class ItemEntity extends PanacheEntity {
     private LocalDateTime dateCollected;
     private LocalDateTime dateDroppedOff;
     private LocalDateTime dateDelivered;
+    private ItemTransport itemTransport;
 }
