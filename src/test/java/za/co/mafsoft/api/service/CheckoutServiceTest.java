@@ -31,9 +31,6 @@ class CheckoutServiceTest {
     @Inject
     CartService cartService;
 
-    @Inject
-    CatalogService catalogService;
-
     User user;
     Catalog catalog1;
     Catalog catalog2;

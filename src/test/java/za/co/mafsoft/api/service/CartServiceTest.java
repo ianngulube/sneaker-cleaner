@@ -27,9 +27,6 @@ class CartServiceTest {
     @Inject
     CartService cartService;
 
-    @Inject
-    CatalogService catalogService;
-
     User user;
     Catalog catalog1 = new Catalog();
     Catalog catalog2 = new Catalog();
