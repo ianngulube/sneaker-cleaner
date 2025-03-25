@@ -10,8 +10,10 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
+import za.co.mafsoft.api.model.CartFiller;
 import za.co.mafsoft.api.model.Catalog;
 import za.co.mafsoft.api.model.User;
+import za.co.mafsoft.api.model.enums.ItemTransport;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -46,7 +48,11 @@ class CartServiceTest {
     @Test
     @Order(1)
     void add_to_cart() {
-        cartService.addToCart(catalog1, user, 3);
+        CartFiller cartFiller = CartFiller.builder()
+                .quantity(3).user(user).catalogItem(catalog1)
+                .itemTransport(ItemTransport.COLLECTABLE_AND_DELIVERABLE)
+                .build();
+        cartService.addToCart(cartFiller);
         Map<Catalog, Integer> map = cartService.viewCart().getCatalogCount();
         Assertions.assertTrue(map.containsKey(catalog1));
         Assertions.assertFalse(map.containsKey(catalog2));
