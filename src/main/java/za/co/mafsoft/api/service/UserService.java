@@ -64,7 +64,7 @@ public class UserService implements IUserService {
     public List<User> getAll() {
         return userRepository.findAll()
                 .stream()
-                .map(panacheEntityBase -> userMapper.entityToModel((UserEntity) panacheEntityBase))
+                .map(panacheEntityBase -> userMapper.entityToModel(panacheEntityBase))
                 .collect(Collectors.toList());
     }
 
