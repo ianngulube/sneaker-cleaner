@@ -4,8 +4,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import za.co.mafsoft.api.model.Cart;
+import za.co.mafsoft.api.model.CartFiller;
 import za.co.mafsoft.api.model.Catalog;
-import za.co.mafsoft.api.model.User;
 
 @Slf4j
 @ApplicationScoped
@@ -17,9 +17,10 @@ public class CartService {
         return this.cart;
     }
 
-    public void addToCart(final Catalog catalogItem, final User user, final Integer quantity) {
-        cart.setUser(user);
-        cart.getCatalogCount().put(catalogItem, quantity);
+    public void addToCart(final CartFiller cartFiller) {
+        cart.setUser(cartFiller.getUser());
+        cart.setItemTransport(cartFiller.getItemTransport());
+        cart.getCatalogCount().put(cartFiller.getCatalogItem(), cartFiller.getQuantity());
     }
 
     public void removeFromCart(final Catalog catalogItem) {
