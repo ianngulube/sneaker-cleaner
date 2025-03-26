@@ -33,6 +33,7 @@ public class UserService implements IUserService {
     @Transactional
     @Override
     public void createUser(final User user) {
+        log.info("UserService::createUser => {} {}", user.getMsisdn(), user.getEmail());
         String verificationCode = AppUtil.generateVerificationCode();
         System.setProperty("sneaker.test.verification.code", verificationCode);
         user.setVerificationCode(verificationCode);
@@ -46,14 +47,16 @@ public class UserService implements IUserService {
     @Transactional
     @Override
     public void verifyUser(final String emailOrMsisdn, final String verificationCode) {
+        log.info("UserService::verifyUser => {}", emailOrMsisdn);
         Optional<User> user = Optional.ofNullable(this.getOne(emailOrMsisdn));
         if (user.isPresent() && verificationCode.equals(user.get().getVerificationCode())) {
-            userRepository.update("verified = ?1", true);
+            userRepository.update("verified = ?1 WHERE id = ?2", true, user.get().getId());
         }
     }
 
     @Override
     public boolean login(UserLogin userLogin) {
+        log.info("UserService::login => {}", userLogin.getEmailOrMsisdn());
         Optional<User> optionalUser = Optional.of(this.getOne(userLogin.getEmailOrMsisdn()));
         return optionalUser
                 .map(user -> user.getPin().equals(userLogin.getPin()) && user.isVerified()).
@@ -70,6 +73,7 @@ public class UserService implements IUserService {
 
     @Override
     public User getOne(String emailOrMsisdn) {
+        log.info("UserService::getOne => {}", emailOrMsisdn);
         PanacheQuery<UserEntity> entity = userRepository.find("email = ?1 OR msisdn = ?2", emailOrMsisdn, emailOrMsisdn);
         if (entity.singleResultOptional().isPresent()) {
             return userMapper.entityToModel(entity.singleResultOptional().get());
