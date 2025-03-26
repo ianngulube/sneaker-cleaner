@@ -10,7 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Data
 public class Cart {
     private User user;
-    private Map<Catalog, Integer> catalogCount = new ConcurrentHashMap<>();
-    private BigDecimal calculatedTotalPrice;
+    private Map<Catalog, Integer> catalogItemCount = new ConcurrentHashMap<>();
     private ItemTransport itemTransport;
+    private BigDecimal calculatedTotalPrice;
+    private BigDecimal deliveryFee;
 }
