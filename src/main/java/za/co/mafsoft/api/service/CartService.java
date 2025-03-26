@@ -20,10 +20,10 @@ public class CartService {
     public void addToCart(final CartFiller cartFiller) {
         cart.setUser(cartFiller.getUser());
         cart.setItemTransport(cartFiller.getItemTransport());
-        cart.getCatalogCount().put(cartFiller.getCatalogItem(), cartFiller.getQuantity());
+        cart.getCatalogItemCount().put(cartFiller.getCatalogItem(), cartFiller.getQuantity());
     }
 
     public void removeFromCart(final Catalog catalogItem) {
-        cart.getCatalogCount().remove(catalogItem);
+        cart.getCatalogItemCount().remove(catalogItem);
     }
 }
