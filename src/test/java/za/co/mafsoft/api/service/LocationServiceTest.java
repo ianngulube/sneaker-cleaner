@@ -4,7 +4,12 @@ import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 import za.co.mafsoft.api.model.Address;
 import za.co.mafsoft.api.model.Cart;
 import za.co.mafsoft.api.model.GeoLocation;
@@ -40,6 +45,7 @@ class LocationServiceTest {
         Cart cart = cartUtil.getCart();
         location.setLongitude("2.000");
         locationService.addLocation(cart, address);
+        Assertions.assertEquals(address, cart.getAddress());
     }
 
     @Test
