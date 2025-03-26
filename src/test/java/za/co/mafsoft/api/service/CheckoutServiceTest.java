@@ -63,15 +63,16 @@ class CheckoutServiceTest {
     @Test
     void checkout() throws DataFormatException {
         CartFiller cartFiller1 = CartFiller.builder()
-                .catalogItem(catalog1).user(user).quantity(4).itemTransport(ItemTransport.COLLECTABLE)
+                .catalogItem(catalog1).user(user).quantity(4).itemTransport(ItemTransport.DROPPABLE_AND_DELIVERABLE)
                 .build();
         CartFiller cartFiller2 = CartFiller.builder()
-                .catalogItem(catalog2).user(user).quantity(7).itemTransport(ItemTransport.DROPPABLE)
+                .catalogItem(catalog2).user(user).quantity(7).itemTransport(ItemTransport.DROPPABLE_AND_DELIVERABLE)
                 .build();
         cartService.addToCart(cartFiller1);
         cartService.addToCart(cartFiller2);
         Cart cart = cartService.viewCart();
         checkoutService.checkout(cart);
         Assertions.assertEquals(cart.getCalculatedTotalPrice(), BigDecimal.valueOf(1800));
+        Assertions.assertEquals(BigDecimal.valueOf(20), cart.getDeliveryFee());
     }
 }

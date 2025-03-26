@@ -50,7 +50,7 @@ class CartServiceTest {
                 .itemTransport(ItemTransport.COLLECTABLE_AND_DELIVERABLE)
                 .build();
         cartService.addToCart(cartFiller);
-        Map<Catalog, Integer> map = cartService.viewCart().getCatalogCount();
+        Map<Catalog, Integer> map = cartService.viewCart().getCatalogItemCount();
         Assertions.assertTrue(map.containsKey(catalog1));
         Assertions.assertFalse(map.containsKey(catalog2));
     }
@@ -59,7 +59,7 @@ class CartServiceTest {
     @Order(2)
     void remove_from_cart() {
         cartService.removeFromCart(catalog1);
-        Map<Catalog, Integer> map = cartService.viewCart().getCatalogCount();
+        Map<Catalog, Integer> map = cartService.viewCart().getCatalogItemCount();
         Assertions.assertFalse(map.containsKey(catalog1));
         Assertions.assertFalse(map.containsKey(catalog2));
     }
