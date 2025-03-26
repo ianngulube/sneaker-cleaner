@@ -14,4 +14,5 @@ public class Cart {
     private ItemTransport itemTransport;
     private BigDecimal calculatedTotalPrice;
     private BigDecimal deliveryFee;
+    private Address address;
 }

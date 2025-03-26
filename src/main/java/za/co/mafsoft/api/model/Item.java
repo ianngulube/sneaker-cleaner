@@ -17,4 +17,5 @@ public abstract class Item {
     private LocalDateTime dateDroppedOff;
     private LocalDateTime dateDelivered;
     private ItemTransport itemTransport;
+    private Address address;
 }
