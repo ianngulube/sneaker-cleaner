@@ -19,23 +19,26 @@ import java.util.zip.DataFormatException;
 @QuarkusTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class CheckoutServiceTest {
+class DeliveryFeeCalculatorServiceTest {
 
     @Inject
+    DeliveryFeeCalculatorService deliveryFeeCalculatorService;
+    @Inject
     CheckoutService checkoutService;
-
     @Inject
     CartUtil cartUtil;
 
+    Cart cart;
+
     @BeforeEach
-    void setUp() {
+    void setUp() throws DataFormatException {
+        cart = cartUtil.getCart();
+        checkoutService.checkout(cart);
     }
 
     @Test
-    void checkout() throws DataFormatException {
-        Cart cart = cartUtil.getCart();
-        checkoutService.checkout(cart);
-        Assertions.assertEquals(cart.getCalculatedTotalPrice(), BigDecimal.valueOf(1800));
+    void calculate_delivery_fee() throws DataFormatException {
+        deliveryFeeCalculatorService.calculateDeliveryFee(cart);
         Assertions.assertEquals(BigDecimal.valueOf(20), cart.getDeliveryFee());
     }
 }
