@@ -1,6 +1,4 @@
 quarkus:
-  smallrye-openapi:
-    path: /swagger
 
   mailer:
     from: register@dreambond.com.na
@@ -10,5 +8,24 @@ quarkus:
     password: Register@2025$
     auth-methods: LOGIN
     login: REQUIRED
-
     mock: true
+
+  http:
+    port: 8080
+  swagger-ui:
+    always-include: true
+    path: /swagger-ui.html
+  smallrye-openapi:
+    path: /swagger
+
+
+  datasource:
+    db-kind: postgresql
+    username: postgres
+    password: postgres
+    jdbc:
+      url: jdbc:postgresql://host.docker.internal:5412/sneaker-db
+      max-size: 16
+
+  flyway:
+    migrate-at-start: true
