@@ -1,0 +1,2 @@
+INSERT INTO public.catalog_table(offeringname, offeringdescription, price, itemtype) VALUES('Lite', 'Wash outside only', 180, 'SNEAKER');
+INSERT INTO public.catalog_table(offeringname, offeringdescription, price, itemtype) VALUES('Full', 'Wash inside and outside', 280, 'SNEAKER');
