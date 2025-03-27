@@ -124,6 +124,7 @@ public class UserService implements IUserService {
                 }
                 loginResponseBuilder.authToken("AUTH_TOKEN");
                 loginResponseBuilder.responseDescription("Success");
+                loginResponseBuilder.user(user);
                 loginResponseBuilder.responseCode(SC_OK);
             } else {
                 loginResponseBuilder.responseDescription("User does not exist");
