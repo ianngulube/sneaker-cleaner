@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 
 @ApplicationScoped
 public class CartUtil {
-    private CartUtil(CartService cartService) {
+    CartUtil(CartService cartService) {
         this.cartService = cartService;
     }
 
