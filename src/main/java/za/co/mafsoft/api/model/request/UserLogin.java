@@ -1,4 +1,4 @@
-package za.co.mafsoft.api.model;
+package za.co.mafsoft.api.model.request;
 
 import lombok.Data;
 
