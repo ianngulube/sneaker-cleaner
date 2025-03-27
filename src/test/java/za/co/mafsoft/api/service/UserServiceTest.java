@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import za.co.mafsoft.api.model.User;
-import za.co.mafsoft.api.model.UserLogin;
+import za.co.mafsoft.api.model.request.UserLogin;
+import za.co.mafsoft.api.model.response.UserLoginResponse;
 import za.co.mafsoft.api.service.interfaces.IUserService;
 
 @Slf4j
@@ -58,7 +59,7 @@ class UserServiceTest {
         UserLogin userLogin = new UserLogin();
         userLogin.setEmailOrMsisdn("ngulubeian94@gmail.com");
         userLogin.setPin("1807");
-        boolean login = userService.login(userLogin);
-        Assertions.assertTrue(login);
+        UserLoginResponse login = userService.login(userLogin);
+        Assertions.assertNotNull(login.getAuthToken());
     }
 }
