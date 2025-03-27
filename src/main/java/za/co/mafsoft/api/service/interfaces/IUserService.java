@@ -2,8 +2,10 @@ package za.co.mafsoft.api.service.interfaces;
 
 import jakarta.transaction.Transactional;
 import za.co.mafsoft.api.model.User;
-import za.co.mafsoft.api.model.UserLogin;
+import za.co.mafsoft.api.model.request.UserLogin;
 import za.co.mafsoft.api.model.response.UserCreateResponse;
+import za.co.mafsoft.api.model.response.UserLoginResponse;
+import za.co.mafsoft.api.model.response.UserVerifyResponse;
 
 import java.util.List;
 
@@ -12,9 +14,9 @@ public interface IUserService {
     UserCreateResponse createUser(User user);
 
     @Transactional
-    void verifyUser(String emailOrMsisdn, String verificationCode);
+    UserVerifyResponse verifyUser(String emailOrMsisdn, String verificationCode);
 
-    boolean login(UserLogin userLogin);
+    UserLoginResponse login(UserLogin userLogin);
 
     List<User> getAll();
 

@@ -10,8 +10,10 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import za.co.mafsoft.api.entity.UserEntity;
 import za.co.mafsoft.api.mapper.UserMapper;
 import za.co.mafsoft.api.model.User;
-import za.co.mafsoft.api.model.UserLogin;
+import za.co.mafsoft.api.model.request.UserLogin;
 import za.co.mafsoft.api.model.response.UserCreateResponse;
+import za.co.mafsoft.api.model.response.UserLoginResponse;
+import za.co.mafsoft.api.model.response.UserVerifyResponse;
 import za.co.mafsoft.api.repository.UserRepository;
 import za.co.mafsoft.api.service.interfaces.IEmailService;
 import za.co.mafsoft.api.service.interfaces.IUserService;
@@ -21,6 +23,10 @@ import java.util.List;
 import java.util.MissingResourceException;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.apache.http.HttpStatus.SC_FORBIDDEN;
+import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 
 @Slf4j
 @ApplicationScoped
@@ -50,7 +56,7 @@ public class UserService implements IUserService {
         } catch (Exception e) {
             log.warn("userRepository::persist failed => {}", e.getMessage());
             return UserCreateResponse.builder()
-                    .responseCode(403)
+                    .responseCode(SC_FORBIDDEN)
                     .responseDescription(e.getCause().getMessage())
                     .build();
         }
@@ -59,28 +65,79 @@ public class UserService implements IUserService {
                         verificationEmailSubject,
                         String.format(verificationEmailText, verificationCode)));
         return UserCreateResponse.builder()
-                .responseCode(200)
+                .responseCode(SC_OK)
                 .responseDescription(String.format("Email %s/ Msisdn %s user created", user.getEmail(), user.getMsisdn()))
                 .build();
     }
 
     @Transactional
     @Override
-    public void verifyUser(final String emailOrMsisdn, final String verificationCode) {
+    public UserVerifyResponse verifyUser(final String emailOrMsisdn, final String verificationCode) {
         log.info("UserService::verifyUser => {}", emailOrMsisdn);
-        Optional<User> user = Optional.ofNullable(this.getOne(emailOrMsisdn));
-        if (user.isPresent() && verificationCode.equals(user.get().getVerificationCode())) {
-            userRepository.update("verified = ?1 WHERE id = ?2", true, user.get().getId());
+        try {
+            Optional<User> user = Optional.ofNullable(this.getOne(emailOrMsisdn));
+            if (user.isPresent()) {
+                if (!verificationCode.equals(user.get().getVerificationCode())) {
+                    return UserVerifyResponse.builder()
+                            .responseCode(SC_FORBIDDEN)
+                            .responseDescription("Incorrect Verification Code")
+                            .build();
+                } else {
+                    userRepository.update("verified = ?1 WHERE id = ?2", true, user.get().getId());
+                    return UserVerifyResponse.builder()
+                            .responseCode(SC_OK)
+                            .responseDescription("Success")
+                            .build();
+                }
+            } else {
+                return UserVerifyResponse.builder()
+                        .responseCode(SC_FORBIDDEN)
+                        .responseDescription("User does not exist")
+                        .build();
+            }
+        } catch (Exception e) {
+            log.warn("{}", e.getMessage());
+            return UserVerifyResponse.builder()
+                    .responseCode(SC_FORBIDDEN)
+                    .responseDescription("User does not exist")
+                    .build();
         }
     }
 
     @Override
-    public boolean login(UserLogin userLogin) {
+    public UserLoginResponse login(UserLogin userLogin) {
         log.info("UserService::login => {}", userLogin.getEmailOrMsisdn());
-        Optional<User> optionalUser = Optional.of(this.getOne(userLogin.getEmailOrMsisdn()));
-        return optionalUser
-                .map(user -> user.getPin().equals(userLogin.getPin()) && user.isVerified()).
-                orElse(false);
+        UserLoginResponse.UserLoginResponseBuilder loginResponseBuilder = UserLoginResponse.builder();
+        try {
+            Optional<User> optionalUser = Optional.ofNullable(this.getOne(userLogin.getEmailOrMsisdn()));
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                if (!user.isVerified()) {
+                    loginResponseBuilder.responseDescription("User needs to be verified before attempt to login");
+                    loginResponseBuilder.responseCode(SC_UNAUTHORIZED);
+                    return loginResponseBuilder.build();
+                }
+                if (!user.getPin().equals(userLogin.getPin())) {
+                    loginResponseBuilder.responseDescription("Incorrect PIN");
+                    loginResponseBuilder.responseCode(SC_UNAUTHORIZED);
+                    return loginResponseBuilder.build();
+                }
+                loginResponseBuilder.authToken("AUTH_TOKEN");
+                loginResponseBuilder.responseDescription("Success");
+                loginResponseBuilder.responseCode(SC_OK);
+            } else {
+                loginResponseBuilder.responseDescription("User does not exist");
+                loginResponseBuilder.responseCode(SC_UNAUTHORIZED);
+            }
+            return loginResponseBuilder.build();
+
+        } catch (Exception e) {
+            log.warn("{}", e.getMessage());
+            loginResponseBuilder.responseDescription("User does not exist");
+            loginResponseBuilder.responseCode(SC_UNAUTHORIZED);
+            return loginResponseBuilder.build();
+        }
+
     }
 
     @Override
