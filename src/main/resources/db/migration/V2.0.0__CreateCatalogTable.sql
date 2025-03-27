@@ -1,6 +1,6 @@
 CREATE TABLE catalog_table (id BIGSERIAL NOT NULL,
-    offeringName VARCHAR(255),
-    offeringDescription VARCHAR(255),
+    offeringName VARCHAR(255) UNIQUE,
+    offeringDescription VARCHAR(255) UNIQUE,
     price VARCHAR(255),
     itemType VARCHAR(255),
     PRIMARY KEY (id));
