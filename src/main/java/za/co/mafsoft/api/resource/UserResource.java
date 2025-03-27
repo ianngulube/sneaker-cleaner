@@ -4,13 +4,15 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import za.co.mafsoft.api.model.User;
-import za.co.mafsoft.api.model.UserLogin;
+import za.co.mafsoft.api.model.request.UserLogin;
+import za.co.mafsoft.api.model.request.UserVerify;
 import za.co.mafsoft.api.model.response.UserCreateResponse;
+import za.co.mafsoft.api.model.response.UserLoginResponse;
+import za.co.mafsoft.api.model.response.UserVerifyResponse;
 import za.co.mafsoft.api.service.interfaces.IUserService;
 
 @Path("/users")
@@ -27,18 +29,17 @@ public class UserResource {
         return Response.ok(createResponse).build();
     }
 
-    @Path("/verify-user/{email-or-msisdn}/{verification-code}")
+    @Path("/verify-user")
     @POST
-    public Response verifyUser(@PathParam("email-or-msisdn") final String emailOrMsisdn,
-                               @PathParam("verification-code") final String verificationCode) {
-        userService.verifyUser(emailOrMsisdn, verificationCode);
-        return Response.ok().build();
+    public Response verifyUser(final UserVerify request) {
+        UserVerifyResponse userVerifyResponse = userService.verifyUser(request.getEmailOrMsisdn(), request.getVerificationCode());
+        return Response.ok(userVerifyResponse).build();
     }
 
     @Path("/login")
     @POST
     public Response login(final UserLogin userLogin) {
-        Boolean result = userService.login(userLogin);
-        return Response.status(Response.Status.OK).entity(result).build();
+        UserLoginResponse loginResponse = userService.login(userLogin);
+        return Response.ok(loginResponse).build();
     }
 }
