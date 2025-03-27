@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class UserCreateResponse {
-    private int responseCode;
+    public Integer responseCode;
     private String responseDescription;
 }
