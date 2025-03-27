@@ -11,6 +11,7 @@ import za.co.mafsoft.api.entity.UserEntity;
 import za.co.mafsoft.api.mapper.UserMapper;
 import za.co.mafsoft.api.model.User;
 import za.co.mafsoft.api.model.UserLogin;
+import za.co.mafsoft.api.model.response.UserCreateResponse;
 import za.co.mafsoft.api.repository.UserRepository;
 import za.co.mafsoft.api.service.interfaces.IEmailService;
 import za.co.mafsoft.api.service.interfaces.IUserService;
@@ -39,16 +40,28 @@ public class UserService implements IUserService {
 
     @Transactional
     @Override
-    public void createUser(final User user) {
+    public UserCreateResponse createUser(final User user) {
         log.info("UserService::createUser => {} {}", user.getMsisdn(), user.getEmail());
         String verificationCode = AppUtil.generateVerificationCode();
         System.setProperty("sneaker.test.verification.code", verificationCode);
         user.setVerificationCode(verificationCode);
-        userRepository.persist(userMapper.modelToEntity(user));
+        try {
+            userRepository.persistAndFlush(userMapper.modelToEntity(user));
+        } catch (Exception e) {
+            log.warn("userRepository::persist failed => {}", e.getMessage());
+            return UserCreateResponse.builder()
+                    .responseCode(403)
+                    .responseDescription(e.getCause().getMessage())
+                    .build();
+        }
         emailService
                 .sendEmail(Mail.withHtml(user.getEmail(),
                         verificationEmailSubject,
                         String.format(verificationEmailText, verificationCode)));
+        return UserCreateResponse.builder()
+                .responseCode(200)
+                .responseDescription(String.format("Email %s/ Msisdn %s user created", user.getEmail(), user.getMsisdn()))
+                .build();
     }
 
     @Transactional
