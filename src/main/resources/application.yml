@@ -18,14 +18,39 @@ quarkus:
   smallrye-openapi:
     path: /swagger
 
-
-  datasource:
-    db-kind: postgresql
-    username: postgres
-    password: postgres
-    jdbc:
-      url: jdbc:postgresql://host.docker.internal:5412/sneaker-db
-      max-size: 16
-
   flyway:
     migrate-at-start: true
+
+app:
+  email:
+    verification:
+      subject: Verification Code
+      text: Your verification code is %s
+
+"%test":
+  quarkus:
+    flyway:
+        enabled: false
+    datasources:
+      devservices:
+        enabled: true
+
+"%dev":
+  quarkus:
+    datasource:
+      db-kind: postgresql
+      username: postgres
+      password: postgres
+      jdbc:
+        url: jdbc:postgresql://host.docker.internal:5412/sneaker-db
+        max-size: 16
+
+"%prod":
+  quarkus:
+    datasource:
+      db-kind: postgresql
+      username: postgres
+      password: postgres
+      jdbc:
+        url: jdbc:postgresql://host.docker.internal:5412/sneaker-db
+        max-size: 16
