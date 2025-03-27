@@ -6,6 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import za.co.mafsoft.api.entity.UserEntity;
 import za.co.mafsoft.api.mapper.UserMapper;
 import za.co.mafsoft.api.model.User;
@@ -30,6 +31,12 @@ public class UserService implements IUserService {
     @Inject
     IEmailService emailService;
 
+    @ConfigProperty(name = "app.email.verification.subject")
+    String verificationEmailSubject;
+    @ConfigProperty(name = "app.email.verification.text")
+    String verificationEmailText;
+
+
     @Transactional
     @Override
     public void createUser(final User user) {
@@ -40,8 +47,8 @@ public class UserService implements IUserService {
         userRepository.persist(userMapper.modelToEntity(user));
         emailService
                 .sendEmail(Mail.withHtml(user.getEmail(),
-                        "Verification Code",
-                        String.format("Your verification code is %s", verificationCode)));
+                        verificationEmailSubject,
+                        String.format(verificationEmailText, verificationCode)));
     }
 
     @Transactional
