@@ -21,6 +21,22 @@ quarkus:
   flyway:
     migrate-at-start: true
 
+  native:
+    resources:
+      includes: publicKey.pem
+
+mp:
+  jwt:
+    verify:
+      issuer: Sneaker Cleaner API Authenticator
+      publickey:
+        location: publicKey.pem
+smallrye:
+  jwt:
+    sign:
+      key:
+        location: privateKey.pem
+
 app:
   email:
     verification:
@@ -30,7 +46,7 @@ app:
 "%test":
   quarkus:
     flyway:
-        enabled: false
+      enabled: false
     datasources:
       devservices:
         enabled: true
