@@ -36,6 +36,10 @@ public class CheckoutService {
         if (Objects.isNull(cart)) {
             return false;
         }
+        if (!Objects.isNull(cart.getCatalogItemCount())
+                && cart.getCatalogItemCount().isEmpty()) {
+            return false;
+        }
         return !Objects.isNull(cart.getCatalogItemCount()) &&
                 !Objects.isNull(cart.getUser()) &&
                 !Objects.isNull(cart.getItemTransport());
