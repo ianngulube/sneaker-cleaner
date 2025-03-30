@@ -15,6 +15,7 @@ import za.co.mafsoft.api.model.response.UserCreateResponse;
 import za.co.mafsoft.api.model.response.UserLoginResponse;
 import za.co.mafsoft.api.model.response.UserVerifyResponse;
 import za.co.mafsoft.api.repository.UserRepository;
+import za.co.mafsoft.api.security.JwtService;
 import za.co.mafsoft.api.service.interfaces.IEmailService;
 import za.co.mafsoft.api.service.interfaces.IUserService;
 import za.co.mafsoft.api.util.AppUtil;
@@ -37,6 +38,8 @@ public class UserService implements IUserService {
     UserMapper userMapper;
     @Inject
     IEmailService emailService;
+    @Inject
+    JwtService jwtService;
 
     @ConfigProperty(name = "app.email.verification.subject")
     String verificationEmailSubject;
@@ -122,7 +125,7 @@ public class UserService implements IUserService {
                     loginResponseBuilder.responseCode(SC_UNAUTHORIZED);
                     return loginResponseBuilder.build();
                 }
-                loginResponseBuilder.authToken("AUTH_TOKEN");
+                loginResponseBuilder.authToken(jwtService.generateToken(user.getEmail()));
                 loginResponseBuilder.responseDescription("Success");
                 loginResponseBuilder.user(user);
                 loginResponseBuilder.responseCode(SC_OK);
