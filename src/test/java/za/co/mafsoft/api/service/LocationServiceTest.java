@@ -15,6 +15,8 @@ import za.co.mafsoft.api.model.Cart;
 import za.co.mafsoft.api.model.GeoLocation;
 import za.co.mafsoft.api.service.util.CartUtil;
 
+import java.util.zip.DataFormatException;
+
 @Slf4j
 @QuarkusTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -41,7 +43,7 @@ class LocationServiceTest {
     }
 
     @Test
-    void add_location() {
+    void add_location() throws DataFormatException {
         Cart cart = cartUtil.getCart();
         location.setLongitude("2.000");
         locationService.addLocation(cart, address);
