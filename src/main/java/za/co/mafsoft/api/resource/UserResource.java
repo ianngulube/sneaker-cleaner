@@ -1,5 +1,6 @@
 package za.co.mafsoft.api.resource;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -18,6 +19,7 @@ import za.co.mafsoft.api.service.interfaces.IUserService;
 @Path("/users")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@PermitAll
 public class UserResource {
     @Inject
     IUserService userService;
