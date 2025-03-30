@@ -1,6 +1,6 @@
 package za.co.mafsoft.api.resource;
 
-import com.fasterxml.jackson.databind.DatabindException;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -20,6 +20,7 @@ import java.util.zip.DataFormatException;
 @Path("/location")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@RolesAllowed({"User","Admin"})
 public class LocationResource {
     @Inject
     LocationService locationService;

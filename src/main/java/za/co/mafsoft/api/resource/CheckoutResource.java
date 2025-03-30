@@ -1,5 +1,6 @@
 package za.co.mafsoft.api.resource;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -17,6 +18,7 @@ import java.util.zip.DataFormatException;
 @Path("/checkout")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@RolesAllowed({"User","Admin"})
 public class CheckoutResource {
     @Inject
     CheckoutService checkoutService;

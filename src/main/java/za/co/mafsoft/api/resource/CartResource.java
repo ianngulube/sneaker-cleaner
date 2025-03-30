@@ -1,5 +1,6 @@
 package za.co.mafsoft.api.resource;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -18,6 +19,7 @@ import za.co.mafsoft.api.service.UserService;
 @Path("/cart")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@RolesAllowed({"User","Admin"})
 public class CartResource {
     @Inject
     CartService cartService;
