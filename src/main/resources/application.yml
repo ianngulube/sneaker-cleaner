@@ -36,6 +36,8 @@ smallrye:
     sign:
       key:
         location: privateKey.pem
+    new-token:
+      lifespan: 600
 
 app:
   email:
