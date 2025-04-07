@@ -60,7 +60,7 @@ app:
       username: postgres
       password: postgres
       jdbc:
-        url: jdbc:postgresql://host.docker.internal:5412/sneaker-db
+        url: jdbc:postgresql://localhost:5412/sneaker-db
         max-size: 16
 
 "%prod":
