@@ -9,6 +9,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
+import za.co.mafsoft.api.model.Cart;
 import za.co.mafsoft.api.service.CartService;
 import za.co.mafsoft.api.service.CheckoutService;
 
@@ -28,8 +29,9 @@ public class CheckoutResource {
     @GET
     public Response checkout() {
         try {
-            checkoutService.checkout(cartService.viewCart());
-            return Response.ok(cartService.viewCart()).build();
+            Cart cart = cartService.viewCart();
+            checkoutService.checkout(cart);
+            return Response.ok(cart).build();
         } catch (DataFormatException e) {
             log.warn("{}", e.getMessage());
             return Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build();
